@@ -6,7 +6,21 @@
           <div>X</div>
         </div>
         <form ref="form"  class="mb-3">
-
+          <b-form-group
+              label="Name"
+              label-for="name-input"
+              invalid-feedback="Name is required"
+              :state="nameState"
+              class="mb-2"
+          >
+            <b-form-input
+                id="name-input"
+                v-model="name"
+                :state="nameState"
+                required
+                class="shadow-none"
+            ></b-form-input>
+          </b-form-group>
           <b-form-group
               label="Type"
               label-for="type-input"
@@ -37,9 +51,10 @@
                 class="shadow-none"
             ></b-form-input>
           </b-form-group>
+
         </form>
         <div class="d-flex align-items-center justify-content-end mb-4">
-          <button type="button" class="btn btn-success"  @click="submitProduct">Add Now</button>
+          <button type="button" class="btn btn-success"  @click="submitProduct">Add</button>
         </div>
       </div>
     </div>

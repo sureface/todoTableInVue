@@ -5,11 +5,15 @@
         v-if="isOpenM2"
         @added-products="products"
     />
+
     <div class="action__modals" @click="$emit('close_modal', $event)">
       <div class="action__modals-card" @click.stop>
         <div class="card__wrapper">
           <div class="card__wrapper_close" @click.stop="$emit('close_modal', $event)">
             <div>X</div>
+          </div>
+          <div class="text-center text-secondary text-lg">
+            Please Add New Employers
           </div>
           <form ref="form"  class="mb-3">
             <b-form-group
@@ -72,22 +76,29 @@
               ></b-form-input>
             </b-form-group>
           </form>
-          <div class="d-flex align-items-center justify-content-end mb-4">
-            <button type="button" class="btn btn-success" @click="addNew">Add Now</button>
+
+          <div class="mt-5 mb-5">
+            <hr>
           </div>
-          <div class="mt-4">
+
+          <div>
 
             <div class="text-center text-secondary text-lg">
-              Add New Product ! (optional)
+              Add New Product ! &nbsp; &nbsp; ( optional )
             </div>
 
-            <button class="btn btn-success mb-3" @click="isOpenM2 = true">add new</button>
+            <button class="btn btn-success mb-3" @click="isOpenM2 = true">Add Product</button>
 
             <m-table
               :m2Products="m2_products"
             />
 
           </div>
+
+          <div class="d-flex align-items-center justify-content-end mt-4">
+            <button type="button" class="btn btn-success" @click="addNew">Add Now</button>
+          </div>
+
         </div>
       </div>
     </div>
