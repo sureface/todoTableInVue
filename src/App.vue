@@ -82,14 +82,14 @@ export default {
     }
   },
   created() {
-    const data = localStorage.getItem('employee')
-    if (data) {
-      this.employers = JSON.parse(data)
+    const employee = localStorage.getItem('employee')
+    if (employee) {
+      this.employers = JSON.parse(employee)
     }
   },
   methods: {
     handleAdd(form) {
-      if (form.id) {
+       if (form.id) {
         this.editEmployers(form)
       }
       else  this.addEmployers(form)

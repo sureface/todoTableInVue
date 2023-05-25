@@ -1,73 +1,93 @@
 <template>
-  <div class="action__modals" @click="$emit('close_modal', $event)">
-    <div class="action__modals-card" @click.stop>
-      <div class="card__wrapper">
-        <div class="card__wrapper_close" @click.stop="$emit('close_modal', $event)">
-          <div>X</div>
-        </div>
-        <form ref="form"  class="mb-3">
-          <b-form-group
-              label="Name"
-              label-for="name-input"
-              invalid-feedback="Name is required"
-              :state="nameState"
-              class="mb-2"
-          >
-            <b-form-input
-                id="name-input"
-                v-model="name"
+  <div>
+    <m-modal
+        @closeM2="closeM2"
+        v-if="isOpenM2"
+        @added-products="products"
+    />
+    <div class="action__modals" @click="$emit('close_modal', $event)">
+      <div class="action__modals-card" @click.stop>
+        <div class="card__wrapper">
+          <div class="card__wrapper_close" @click.stop="$emit('close_modal', $event)">
+            <div>X</div>
+          </div>
+          <form ref="form"  class="mb-3">
+            <b-form-group
+                label="Name"
+                label-for="name-input"
+                invalid-feedback="Name is required"
                 :state="nameState"
-                required
-                class="shadow-none"
-            ></b-form-input>
-          </b-form-group>
-          <b-form-group
-              label="Last Name"
-              label-for="Lname-input"
-              invalid-feedback="Last Name is required"
-              :state="nameState"
-              class="mb-2"
-          >
-            <b-form-input
-                id="Lname-input"
-                v-model="last_name"
+                class="mb-2"
+            >
+              <b-form-input
+                  id="name-input"
+                  v-model="name"
+                  :state="nameState"
+                  required
+                  class="shadow-none"
+              ></b-form-input>
+            </b-form-group>
+            <b-form-group
+                label="Last Name"
+                label-for="Lname-input"
+                invalid-feedback="Last Name is required"
                 :state="nameState"
-                required
-                class="shadow-none"
-            ></b-form-input>
-          </b-form-group>
-          <b-form-group
-              label="Age"
-              label-for="age-input"
-              invalid-feedback="Age is required"
-              :state="nameState"
-              class="mb-2"
-          >
-            <b-form-input
-                id="age-input"
-                v-model="age"
+                class="mb-2"
+            >
+              <b-form-input
+                  id="Lname-input"
+                  v-model="last_name"
+                  :state="nameState"
+                  required
+                  class="shadow-none"
+              ></b-form-input>
+            </b-form-group>
+            <b-form-group
+                label="Age"
+                label-for="age-input"
+                invalid-feedback="Age is required"
                 :state="nameState"
-                required
-                class="shadow-none"
-            ></b-form-input>
-          </b-form-group>
-          <b-form-group
-              label="Last Work Place"
-              label-for="last-work-input"
-              invalid-feedback="Last Work Place is required"
-              :state="nameState"
-          >
-            <b-form-input
-                id="last-work-input"
-                v-model="last_work_place"
+                class="mb-2"
+            >
+              <b-form-input
+                  id="age-input"
+                  v-model="age"
+                  :state="nameState"
+                  required
+                  class="shadow-none"
+              ></b-form-input>
+            </b-form-group>
+            <b-form-group
+                label="Last Work Place"
+                label-for="last-work-input"
+                invalid-feedback="Last Work Place is required"
                 :state="nameState"
-                required
-                class="shadow-none"
-            ></b-form-input>
-          </b-form-group>
-        </form>
-        <div class="d-flex align-items-center justify-content-end">
-          <button type="button" class="btn btn-success" @click="addNew">Add Now</button>
+            >
+              <b-form-input
+                  id="last-work-input"
+                  v-model="last_work_place"
+                  :state="nameState"
+                  required
+                  class="shadow-none"
+              ></b-form-input>
+            </b-form-group>
+          </form>
+          <div class="d-flex align-items-center justify-content-end mb-4">
+            <button type="button" class="btn btn-success" @click="addNew">Add Now</button>
+          </div>
+          <div class="mt-4">
+
+            <div class="text-center text-secondary text-lg">
+              Add New Product ! (optional)
+            </div>
+
+            <button class="btn btn-success mb-3" @click="isOpenM2 = true">add new</button>
+
+            <m-table
+              :m2Products="m2_products"
+            />
+
+          </div>
         </div>
       </div>
     </div>
@@ -75,10 +95,16 @@
 </template>
 
 <script>
+import mTable from './additionalTable/m-table';
+import mModal from './additionalTable/m-modal';
+
 export default {
   name: "actionModals",
   props: {
     selectedEmployee: Object,
+  },
+  components: {
+    mTable,mModal
   },
   data() {
     return {
@@ -88,6 +114,8 @@ export default {
       age: null,
       last_work_place: '',
       nameState: null,
+      isOpenM2: false,
+      m2_products: []
     }
   },
   methods: {
@@ -97,11 +125,11 @@ export default {
       return valid
     },
     resetModal() {
-      this.name = ''
-      this.last_name = ''
-      this.age = ''
-      this.last_work_place = ''
-      this.nameState = null
+      this.name = '';
+      this.last_name = '';
+      this.age = null;
+      this.last_work_place = '';
+      this.nameState = null;
     },
     addNew() {
       if (!this.checkFormValidity()) {
@@ -119,6 +147,18 @@ export default {
         this.last_work_place = this.selectedEmployee.last_work_place;
         this.id = this.selectedEmployee.id
       }
+    },
+    closeM2() {
+      this.isOpenM2 = false
+    },
+    products(form) {
+
+      this.m2_products.push(form)
+
+      for (let i = 1; i <= this.m2_products.length; i++) {
+        this.m2_products[i - 1].id = i
+      }
+
     }
   },
   mounted() {
