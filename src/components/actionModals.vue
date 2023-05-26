@@ -163,12 +163,13 @@ export default {
       this.isOpenM2 = false
     },
     products(form) {
+      console.log(form, '1modal')
+
+      form.id = this.m2_products.length + 1;
 
       this.m2_products.push(form)
 
-      for (let i = 1; i <= this.m2_products.length; i++) {
-        this.m2_products[i - 1].id = i
-      }
+
 
     }
   },

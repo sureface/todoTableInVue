@@ -47,11 +47,13 @@ export default {
     mModal,
   },
   props: {
-    m2Products: Array,
+    m2Products: {
+      default: [],
+      Array
+    },
   },
   data() {
     return {
-      products: [],
       fields: [
         {
           key: 'name',
@@ -66,15 +68,28 @@ export default {
           sortable: true,
         },
         {
+          key: 'size',
+          sortable: true,
+        },
+        {
+          key: 'date',
+          sortable: true,
+        },
+        {
+          key: 'quantity',
+          sortable: true,
+        },
+        {
+          key: 'color',
+          sortable: true,
+        },
+        {
           key: 'actions',
         },
       ],
       isOpenM2: false,
       selectedProducts: {}
     }
-  },
-  created() {
-    this.products = this.m2Products;
   },
   methods: {
     handleAdd(form) {
@@ -83,6 +98,10 @@ export default {
           this.products[i].name = form.name
           this.products[i].type = form.type
           this.products[i].material = form.material
+          this.products[i].size = form.size
+          this.products[i].date = form.date
+          this.products[i].color = form.color
+          this.products[i].quantity = form.quantity
         }
       }
     },
@@ -96,9 +115,13 @@ export default {
     },
     closeM2() {
       this.isOpenM2 = false
-    }
+    },
   },
-
+  computed: {
+    products() {
+      return this.m2Products;
+    }
+  }
 }
 </script>
 
