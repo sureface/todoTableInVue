@@ -91,6 +91,7 @@
 
             <m-table
               :m2Products="m2_products"
+              :selectedId="selectedEmployee.id"
             />
 
           </div>
@@ -142,11 +143,19 @@ export default {
       this.last_work_place = '';
       this.nameState = null;
     },
+
     addNew() {
       if (!this.checkFormValidity()) {
         return
       }
-      this.$emit('added-employee', {name: this.name, last_name: this.last_name, age: this.age, last_work_place: this.last_work_place, id: this.id})
+      this.$emit('added-employee', {
+        name: this.name,
+        last_name: this.last_name,
+        age: this.age,
+        last_work_place: this.last_work_place,
+        id: this.id,
+        subForm: this.m2_products
+      })
       this.resetModal();
       this.$emit('close_modal', event)
     },
@@ -163,14 +172,8 @@ export default {
       this.isOpenM2 = false
     },
     products(form) {
-      console.log(form, '1modal')
-
       form.id = this.m2_products.length + 1;
-
       this.m2_products.push(form)
-
-
-
     }
   },
   mounted() {

@@ -1,5 +1,6 @@
 <template>
   <div>
+    {{products}}
     <b-table
         hover
         :items="products"
@@ -48,9 +49,10 @@ export default {
   },
   props: {
     m2Products: {
-      default: [],
+      default: [{}],
       Array
     },
+    selectedId: Number,
   },
   data() {
     return {
@@ -88,9 +90,32 @@ export default {
         },
       ],
       isOpenM2: false,
-      selectedProducts: {}
+      selectedProducts: {},
+      editSubForm: [],
+
     }
   },
+
+  created() {
+    let employee = localStorage.getItem('employee')
+
+
+    if (employee) {
+      employee =  JSON.parse(employee)
+
+      for (let i = 0; i < employee.length; i++) {
+
+        if (this.selectedId === employee[i].id) {
+          this.editSubForm = employee[i].subForm
+        }
+
+      }
+
+    }
+
+    console.log('products', this.products)
+  },
+
   methods: {
     handleAdd(form) {
       for (let i = 0; i < this.products.length; i++) {
@@ -119,9 +144,27 @@ export default {
   },
   computed: {
     products() {
-      return this.m2Products;
+      let newProducts = this.m2Products
+      return newProducts.push(this.editSubForm)
     }
-  }
+  },
+
+
+
+  // watch: {
+  //   products: {
+  //     handler() {
+  //       let employee = localStorage.getItem('employee')
+  //
+  //       if (employee) {
+  //         employee =  JSON.parse(employee)
+  //       }
+  //       console.log(6,employee)
+  //       return this.products = employee.subForm;
+  //     },
+  //     deep: true,
+  //   }
+  // }
 }
 </script>
 

@@ -8,7 +8,6 @@
         v-if="isOpen || isEdit"
         @close_modal="closeModal"
         @added-employee="handleAdd"
-
     />
 
     <div class="container">
@@ -94,20 +93,22 @@ export default {
       }
       else  this.addEmployers(form)
     },
+
     addEmployers(form) {
       this.employers.push(
           {
             first_name: form.name,
             last_name: form.last_name,
             age: form.age,
-            last_work_place: form.last_work_place
+            last_work_place: form.last_work_place,
+            subForm: form.subForm
           }
       )
-      for (let i = 1; i <= this.employers.length; i++) {
-        this.employers[i - 1].id = i
-      }
+      form.id = this.employers.length + 1;
+
       localStorage.setItem('employee', JSON.stringify(this.employers))
     },
+
     editEmployers(form) {
       for (let i = 0; i < this.employers.length; i++) {
         if (this.employers[i].id === form.id) {
