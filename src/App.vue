@@ -8,6 +8,7 @@
         v-if="isOpen || isEdit"
         @close_modal="closeModal"
         @added-employee="handleAdd"
+        :isOpen="isOpen"
     />
 
     <div class="container">
@@ -88,23 +89,26 @@ export default {
   },
   methods: {
     handleAdd(form) {
-       if (form.id) {
+      if (form.id) {
         this.editEmployers(form)
       }
       else  this.addEmployers(form)
     },
 
-    addEmployers(form) {
+    addEmployers(employersForm) {
+
+      employersForm.id = this.employers.length + 1;
+
       this.employers.push(
           {
-            first_name: form.name,
-            last_name: form.last_name,
-            age: form.age,
-            last_work_place: form.last_work_place,
-            subForm: form.subForm
+            id: employersForm.id,
+            first_name: employersForm.name,
+            last_name: employersForm.last_name,
+            age: employersForm.age,
+            last_work_place: employersForm.last_work_place,
+            subForm: employersForm.subForm
           }
       )
-      form.id = this.employers.length + 1;
 
       localStorage.setItem('employee', JSON.stringify(this.employers))
     },

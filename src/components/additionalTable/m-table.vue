@@ -1,9 +1,8 @@
 <template>
   <div>
-    {{products}}
     <b-table
         hover
-        :items="products"
+        :items="subForm"
         :fields="fields"
         responsive="sm"
         label-sort-asc=""
@@ -48,11 +47,7 @@ export default {
     mModal,
   },
   props: {
-    m2Products: {
-      default: [{}],
-      Array
-    },
-    selectedId: Number,
+    subForm: Array,
   },
   data() {
     return {
@@ -92,61 +87,63 @@ export default {
       isOpenM2: false,
       selectedProducts: {},
       editSubForm: [],
-
     }
   },
 
   created() {
-    let employee = localStorage.getItem('employee')
-
-
-    if (employee) {
-      employee =  JSON.parse(employee)
-
-      for (let i = 0; i < employee.length; i++) {
-
-        if (this.selectedId === employee[i].id) {
-          this.editSubForm = employee[i].subForm
-        }
-
-      }
-
-    }
-
-    console.log('products', this.products)
+    // let employee = localStorage.getItem('employee')
+    //
+    //
+    // if (employee) {
+    //   employee =  JSON.parse(employee)
+    //
+    //   for (let i = 0; i < employee.length; i++) {
+    //
+    //     if (this.selectedId === employee[i].id) {
+    //       this.editSubForm = employee[i].subForm
+    //     }
+    //
+    //   }
+    //
+    // }
+    //
+    // console.log('products', this.products)
   },
 
   methods: {
-    handleAdd(form) {
-      for (let i = 0; i < this.products.length; i++) {
-        if (this.products[i].id === form.id) {
-          this.products[i].name = form.name
-          this.products[i].type = form.type
-          this.products[i].material = form.material
-          this.products[i].size = form.size
-          this.products[i].date = form.date
-          this.products[i].color = form.color
-          this.products[i].quantity = form.quantity
-        }
-      }
+    handleAdd(subForm) {
+      console.log(1,subForm)
+      // for (let i = 0; i < this.products.length; i++) {
+      //   if (this.products[i].id === form.id) {
+      //     this.products[i].name = form.name
+      //     this.products[i].type = form.type
+      //     this.products[i].material = form.material
+      //     this.products[i].size = form.size
+      //     this.products[i].date = form.date
+      //     this.products[i].color = form.color
+      //     this.products[i].quantity = form.quantity
+      //   }
+      // }
     },
     edit(item) {
-      this.selectedProducts = item;
-      this.isOpenM2 = true;
+      console.log(2,item)
+      // this.selectedProducts = item;
+      // this.isOpenM2 = true;
     },
     del(item) {
-      const id = this.products.indexOf(item)
-      this.products.splice(id, 1)
+      console.log(3,item)
+      // const id = this.products.indexOf(item)
+      // this.products.splice(id, 1)
     },
     closeM2() {
       this.isOpenM2 = false
     },
   },
   computed: {
-    products() {
-      let newProducts = this.m2Products
-      return newProducts.push(this.editSubForm)
-    }
+    // products() {
+    //   let newProducts = this.m2Products
+    //   return newProducts.concat(this.editSubForm)
+    // }
   },
 
 

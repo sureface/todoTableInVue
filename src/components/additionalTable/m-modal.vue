@@ -97,7 +97,7 @@
 
         </form>
         <div class="d-flex align-items-center justify-content-end mb-4">
-          <button type="button" class="btn btn-success"  @click="submitProduct">Add</button>
+          <button type="button" class="btn btn-success"  @click="submitProduct">Add Products</button>
         </div>
       </div>
     </div>
@@ -109,6 +109,7 @@ export default {
   name: "m-modal",
   props: {
     selectedProducts: Object,
+    modalOpened: Boolean,
   },
   data() {
     return {
@@ -133,6 +134,11 @@ export default {
         { item: 'D', name: 'Blue' },
       ],
       quantity: 1,
+    }
+  },
+  created() {
+    if (this.modalOpened) {
+      this.resetModal()
     }
   },
   methods: {

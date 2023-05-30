@@ -4,12 +4,13 @@
         @closeM2="closeM2"
         v-if="isOpenM2"
         @added-products="products"
+        :modalOpened="isOpen"
     />
 
-    <div class="action__modals" @click="$emit('close_modal', $event)">
+    <div class="action__modals" @click="closeModal1">
       <div class="action__modals-card" @click.stop>
         <div class="card__wrapper">
-          <div class="card__wrapper_close" @click.stop="$emit('close_modal', $event)">
+          <div class="card__wrapper_close" @click.stop="closeModal1">
             <div>X</div>
           </div>
           <div class="text-center text-secondary text-lg">
@@ -90,18 +91,18 @@
             <button class="btn btn-success mb-3" @click="isOpenM2 = true">Add Product</button>
 
             <m-table
-              :m2Products="m2_products"
-              :selectedId="selectedEmployee.id"
+              :subForm="isOpen ? [] : selectedEmployee ? selectedEmployee.subForm : this.subForm"
             />
 
           </div>
 
           <div class="d-flex align-items-center justify-content-end mt-4">
-            <button type="button" class="btn btn-success" @click="addNew">Add Now</button>
+            <button type="button" class="btn btn-success" @click="addEmployee">Add Now</button>
           </div>
 
         </div>
       </div>
+
     </div>
   </div>
 </template>
@@ -114,6 +115,7 @@ export default {
   name: "actionModals",
   props: {
     selectedEmployee: Object,
+    isOpen: Boolean
   },
   components: {
     mTable,mModal
@@ -121,13 +123,15 @@ export default {
   data() {
     return {
       id: null,
+
       name: '',
       last_name: '',
       age: null,
       last_work_place: '',
+      subForm: [],
+
       nameState: null,
       isOpenM2: false,
-      m2_products: []
     }
   },
   methods: {
@@ -143,8 +147,11 @@ export default {
       this.last_work_place = '';
       this.nameState = null;
     },
-
-    addNew() {
+    closeModal1() {
+      this.$emit('close_modal', event);
+      this.resetModal()
+    },
+    addEmployee() {
       if (!this.checkFormValidity()) {
         return
       }
@@ -154,7 +161,7 @@ export default {
         age: this.age,
         last_work_place: this.last_work_place,
         id: this.id,
-        subForm: this.m2_products
+        subForm: this.subForm
       })
       this.resetModal();
       this.$emit('close_modal', event)
@@ -171,13 +178,20 @@ export default {
     closeM2() {
       this.isOpenM2 = false
     },
-    products(form) {
-      form.id = this.m2_products.length + 1;
-      this.m2_products.push(form)
+    products(subForm) {
+      // subForm.id = this.m2_products.length + 1;
+      // this.m2_products.push(subForm)
+      subForm.id = this.subForm.length + 1;
+
+      this.subForm.push(subForm)
     }
   },
   mounted() {
     this.editSelectedEmployee()
+    if (this.isOpen) {
+      this.resetModal()
+
+    }
   }
 }
 </script>
