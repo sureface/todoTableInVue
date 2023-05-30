@@ -126,6 +126,9 @@ export default {
       // }
     },
     edit(item) {
+      //get selected row item
+      console.log('selected products',item)
+
       this.selectedProducts = item;
       this.isOpenM2 = true;
     },

@@ -97,7 +97,7 @@
 
         </form>
         <div class="d-flex align-items-center justify-content-end mb-4">
-          <button type="button" class="btn btn-success"  @click="submitProduct">Add Products</button>
+          <button type="button" class="btn btn-success"  @click="submitProduct">{{ editActionGoing ? 'Edit Products' : 'Add Products' }}</button>
         </div>
       </div>
     </div>
@@ -114,10 +114,12 @@ export default {
   data() {
     return {
       nameState: null,
+
+      id: null,
+
       name: '',
       type: '',
       material: '',
-      id: null,
       selected: null,
       options: [
         { value: null, text: 'Please select the Size', disabled: true },
@@ -134,6 +136,8 @@ export default {
         { item: 'D', name: 'Blue' },
       ],
       quantity: 1,
+
+      editActionGoing: false,
     }
   },
   created() {
@@ -157,27 +161,57 @@ export default {
       this.selected = '';
       this.nameState = null;
     },
+
+
     submitProduct() {
       if (!this.checkFormValidity()) {
         return
       }
-      this.$emit('products',
-          {
-            name: this.name,
-            type: this.type,
-            material: this.material,
-            size: this.currentValSize(),
-            date: this.selectDate,
-            color: this.currentValColor(),
-            quantity: this.quantity,
-            id: this.id,
-          }
-      )
+
+      if (this.id === null) {
+        console.log('ADD work here')
+
+        this.$emit('add-products',
+            {
+              name: this.name,
+              type: this.type,
+              material: this.material,
+              size: this.currentValSize(),
+              date: this.selectDate,
+              color: this.currentValColor(),
+              quantity: this.quantity,
+              id: this.id,
+            }
+        )
+
+      } else {
+        console.log('EDIT work here')
+
+        this.$emit('edit-products',
+            {
+              name: this.name,
+              type: this.type,
+              material: this.material,
+              size: this.currentValSize(),
+              date: this.selectDate,
+              color: this.currentValColor(),
+              quantity: this.quantity,
+              id: this.id,
+            }
+        )
+
+      }
+
       this.resetModal()
       this.$emit('closeM2', event)
     },
+
+
     editSelectedProducts() {
       if (Object.keys(this.selectedProducts).length) {
+
+        this.editActionGoing = true;
+
         this.name = this.selectedProducts.name;
         this.type = this.selectedProducts.type;
         this.material = this.selectedProducts.material;
@@ -186,6 +220,8 @@ export default {
         this.byDefaultColor = this.currentValColor();
         this.quantity = this.selectedProducts.quantity;
         this.id = this.selectedProducts.id
+
+        console.log(this.id)
       }
     },
     currentValSize() {

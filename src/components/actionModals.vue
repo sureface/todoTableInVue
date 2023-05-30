@@ -3,7 +3,11 @@
     <m-modal
         @closeM2="closeM2"
         v-if="isOpenM2"
-        @products="products"
+
+        @add-products="addProducts"
+
+        @edit-products="editProducts"
+
         :modalOpened="isOpen"
     />
 
@@ -91,7 +95,7 @@
             <button class="btn btn-success mb-3" @click="isOpenM2 = true">Add Product</button>
 
             <m-table
-              :subForm="detect_add_product ? add_product : subForm"
+              :subForm="isEditing ? editSubForm : subForm"
               @deleteSubForm="deleteSubForm"
             />
 
@@ -131,8 +135,8 @@ export default {
       last_work_place: '',
       subForm: [],
 
-      add_product: [],
-      detect_add_product: false,
+      editSubForm: [],
+      isEditing: false,
 
       nameState: null,
       isOpenM2: false,
@@ -159,17 +163,21 @@ export default {
       if (!this.checkFormValidity()) {
         return
       }
+
       this.$emit('added-employee', {
         name: this.name,
         last_name: this.last_name,
         age: this.age,
         last_work_place: this.last_work_place,
         id: this.id,
-        subForm: this.subForm
+
+        subForm: this.subForm,
       })
+
       this.resetModal();
       this.$emit('close_modal', event)
     },
+
     editSelectedEmployee() {
       if (Object.keys(this.selectedEmployee).length) {
         this.name = this.selectedEmployee.first_name;
@@ -179,22 +187,25 @@ export default {
         this.id = this.selectedEmployee.id
       }
     },
+
     closeM2() {
       this.isOpenM2 = false
     },
-    products(subForm) {
-      console.log(1,subForm)
 
-      if (subForm.id === null) {
-        this.detect_add_product = true
-        subForm.id = this.add_product.length + 1;
-        this.add_product.push(subForm)
-        console.log(this.detect_add_product)
-      }
+    //add for table 2
+    addProducts(addSubForm) {
+      //add id and push global data
+      addSubForm.id = this.subForm.length + 1;
+      this.subForm.push(addSubForm)
+      console.log('add action for 2 modal',this.subForm)
+    },
 
-      subForm.id = this.subForm.length + 1;
+    //edit for table 2
+    editProducts(editSubForm) {
+      this.isEditing = true
+      this.editSubForm.push(editSubForm)
 
-      this.subForm.push(subForm)
+      console.log('edit action for modal 2',this.editSubForm)
     },
     deleteSubForm(leftForm) {
       this.subForm = leftForm
