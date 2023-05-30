@@ -161,7 +161,7 @@ export default {
       if (!this.checkFormValidity()) {
         return
       }
-      this.$emit('added-products',
+      this.$emit('products',
           {
             name: this.name,
             type: this.type,

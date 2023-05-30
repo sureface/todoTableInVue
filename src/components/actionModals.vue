@@ -3,7 +3,7 @@
     <m-modal
         @closeM2="closeM2"
         v-if="isOpenM2"
-        @added-products="products"
+        @products="products"
         :modalOpened="isOpen"
     />
 
@@ -91,7 +91,8 @@
             <button class="btn btn-success mb-3" @click="isOpenM2 = true">Add Product</button>
 
             <m-table
-              :subForm="isOpen ? [] : selectedEmployee ? selectedEmployee.subForm : this.subForm"
+              :subForm="detect_add_product ? add_product : subForm"
+              @deleteSubForm="deleteSubForm"
             />
 
           </div>
@@ -129,6 +130,9 @@ export default {
       age: null,
       last_work_place: '',
       subForm: [],
+
+      add_product: [],
+      detect_add_product: false,
 
       nameState: null,
       isOpenM2: false,
@@ -179,11 +183,21 @@ export default {
       this.isOpenM2 = false
     },
     products(subForm) {
-      // subForm.id = this.m2_products.length + 1;
-      // this.m2_products.push(subForm)
+      console.log(1,subForm)
+
+      if (subForm.id === null) {
+        this.detect_add_product = true
+        subForm.id = this.add_product.length + 1;
+        this.add_product.push(subForm)
+        console.log(this.detect_add_product)
+      }
+
       subForm.id = this.subForm.length + 1;
 
       this.subForm.push(subForm)
+    },
+    deleteSubForm(leftForm) {
+      this.subForm = leftForm
     }
   },
   mounted() {

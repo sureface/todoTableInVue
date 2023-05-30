@@ -126,24 +126,22 @@ export default {
       // }
     },
     edit(item) {
-      console.log(2,item)
-      // this.selectedProducts = item;
-      // this.isOpenM2 = true;
+      this.selectedProducts = item;
+      this.isOpenM2 = true;
     },
     del(item) {
-      console.log(3,item)
-      // const id = this.products.indexOf(item)
-      // this.products.splice(id, 1)
+      const id = this.deleteSubForm.indexOf(item)
+      this.deleteSubForm.splice(id, 1)
+      this.$emit('deleteSubForm', this.deleteSubForm)
     },
     closeM2() {
       this.isOpenM2 = false
     },
   },
   computed: {
-    // products() {
-    //   let newProducts = this.m2Products
-    //   return newProducts.concat(this.editSubForm)
-    // }
+    deleteSubForm() {
+      return this.subForm
+    }
   },
 
 

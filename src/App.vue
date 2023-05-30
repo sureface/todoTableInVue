@@ -89,6 +89,7 @@ export default {
   },
   methods: {
     handleAdd(form) {
+      console.log('detect',form)
       if (form.id) {
         this.editEmployers(form)
       }
@@ -110,16 +111,33 @@ export default {
           }
       )
 
+      console.log(1,this.employers)
+
       localStorage.setItem('employee', JSON.stringify(this.employers))
     },
 
     editEmployers(form) {
+      console.log('worked')
       for (let i = 0; i < this.employers.length; i++) {
         if (this.employers[i].id === form.id) {
           this.employers[i].first_name = form.name
           this.employers[i].last_name = form.last_name
           this.employers[i].age = form.age
           this.employers[i].last_work_place = form.last_work_place
+          this.employers[i].id = form.id
+
+          for (let j = 0; j < this.employers[i].subForm.length; j++) {
+            this.employers[i].subForm[j].name = form.subForm.name
+            this.employers[i].subForm[j].type = form.subForm.type
+            this.employers[i].subForm[j].material = form.subForm.material
+            this.employers[i].subForm[j].selected = form.subForm.selected
+            this.employers[i].subForm[j].selectDate = form.subForm.selectDate
+            this.employers[i].subForm[j].byDefaultColor = form.subForm.byDefaultColor
+            this.employers[i].subForm[j].quantity = form.subForm.quantity
+            this.employers[i].subForm[j].quantity = form.subForm.quantity
+            this.employers[i].subForm[j].id = form.subForm.id
+
+          }
         }
       }
       localStorage.setItem('employee', JSON.stringify(this.employers))
