@@ -4,11 +4,11 @@
     <bg-video />
 
     <Modal
-        :selectedEmployee="selectedEmployee"
-        v-if="isOpen || isEdit"
+        v-if="isOpen"
+        :editedIndex="editedIndex"
+        :editedEmployers="editedEmployers"
         @close_modal="closeModal"
-        @added-employee="addEmployers"
-        :isOpen="isOpen"
+        @formData="handleFormData"
     />
 
     <div class="container">
@@ -69,82 +69,163 @@ export default {
   data() {
     return {
       fields: [
+        { key: 'name', sortable: true},
         { key: 'last_name', sortable: true},
-        { key: 'first_name', sortable: true},
         { key: 'age', sortable: true },
         { key: 'last_work_place', sortable: true},
         { key: 'actions'},
       ],
       employers: [],
+      editedIndex: -1,
+      editedEmployers: {
+        name: '',
+        last_name: '',
+        age: 0,
+        last_work_place: '',
+        address: [
+          {
+            country: '',
+            street: '',
+            village: '',
+          }
+        ]
+      },
+      defaultEmployers: {
+        name: '',
+        last_name: '',
+        age: 0,
+        last_work_place: '',
+        address: [
+          {
+            country: '',
+            street: '',
+            village: '',
+          }
+        ]
+      },
       isOpen: false,
-      isEdit: false,
-      selectedEmployee: {}
     }
   },
   created() {
-    const employee = localStorage.getItem('employee')
-    if (employee) {
-      this.employers = JSON.parse(employee)
-    }
+    this.initialize();
   },
   methods: {
-    addEmployers(employersForm) {
-
-      employersForm.id = this.employers.length + 1;
-
-      this.employers.push(
-          {
-            id: employersForm.id,
-            first_name: employersForm.name,
-            last_name: employersForm.last_name,
-            age: employersForm.age,
-            last_work_place: employersForm.last_work_place,
-            subForm: employersForm.subForm
-          }
-      )
-
-      console.log('success adding', this.employers)
-
-      localStorage.setItem('employee', JSON.stringify(this.employers))
+    initialize() {
+      this.employers = [
+        {
+          name: 'joseph',
+          last_name: 'josephev',
+          age: '33',
+          last_work_place: 'Google',
+          address: [
+            {
+              country: 'USA',
+              street: 'Street 77',
+              village: 'silicon',
+            },
+            {
+              country: 'USA',
+              street: 'Street 77',
+              village: 'silicon',
+            },
+          ]
+        },
+        {
+          name: 'joseph',
+          last_name: 'josephev',
+          age: '33',
+          last_work_place: 'Google',
+          address: [
+            {
+              country: 'USA',
+              street: 'Street 77',
+              village: 'silicon',
+            },
+            {
+              country: 'USA',
+              street: 'Street 77',
+              village: 'silicon',
+            },
+          ]
+        },
+        {
+          name: 'joseph',
+          last_name: 'josephev',
+          age: '33',
+          last_work_place: 'Google',
+          address: [
+            {
+              country: 'USA',
+              street: 'Street 77',
+              village: 'silicon',
+            },
+            {
+              country: 'USA',
+              street: 'Street 77',
+              village: 'silicon',
+            },
+          ]
+        },
+        {
+          name: 'joseph',
+          last_name: 'josephev',
+          age: '33',
+          last_work_place: 'Google',
+          address: [
+            {
+              country: 'USA',
+              street: 'Street 77',
+              village: 'silicon',
+            },
+            {
+              country: 'USA',
+              street: 'Street 77',
+              village: 'silicon',
+            },
+          ]
+        },
+        {
+          name: 'joseph',
+          last_name: 'josephev',
+          age: '33',
+          last_work_place: 'Google',
+          address: [
+            {
+              country: 'USA',
+              street: 'Street 77',
+              village: 'silicon',
+            },
+            {
+              country: 'USA',
+              street: 'Street 77',
+              village: 'silicon',
+            },
+          ]
+        },
+      ]
     },
-
-    editEmployers(form) {
-      for (let i = 0; i < this.employers.length; i++) {
-        if (this.employers[i].id === form.id) {
-          this.employers[i].first_name = form.name
-          this.employers[i].last_name = form.last_name
-          this.employers[i].age = form.age
-          this.employers[i].last_work_place = form.last_work_place
-          this.employers[i].id = form.id
-
-          // for (let j = 0; j < this.employers[i].subForm.length; j++) {
-          //   this.employers[i].subForm[j].name = form.subForm.name
-          //   this.employers[i].subForm[j].type = form.subForm.type
-          //   this.employers[i].subForm[j].material = form.subForm.material
-          //   this.employers[i].subForm[j].selected = form.subForm.selected
-          //   this.employers[i].subForm[j].selectDate = form.subForm.selectDate
-          //   this.employers[i].subForm[j].byDefaultColor = form.subForm.byDefaultColor
-          //   this.employers[i].subForm[j].quantity = form.subForm.quantity
-          //   this.employers[i].subForm[j].quantity = form.subForm.quantity
-          //   this.employers[i].subForm[j].id = form.subForm.id
-          //
-          // }
-        }
+    handleFormData(formData) {
+      if (this.editedIndex > -1) {
+        Object.assign(this.employers[this.editedIndex], formData)
+      } else {
+        this.employers.push(formData)
       }
-      localStorage.setItem('employee', JSON.stringify(this.employers))
     },
     editItem(item) {
-      this.selectedEmployee = item;
-      this.isEdit = true
+      this.isOpen = true
+      this.editedIndex = this.employers.indexOf(item)
+      this.editedEmployers = Object.assign({}, item)
     },
     closeModal() {
       this.isOpen = false
-      this.isEdit = false
+      this.$nextTick(() => {
+        this.editedEmployers = Object.assign({}, this.defaultEmployers)
+        this.editedIndex = -1
+      })
     },
     deleteItem(item) {
-      const id = this.employers.indexOf(item)
-      this.employers.splice(id, 1)
-      localStorage.setItem('employee', JSON.stringify(this.employers))
+      this.editedIndex = this.employers.indexOf(item)
+      this.employers.splice(this.editedIndex, 1)
     }
   }
 }

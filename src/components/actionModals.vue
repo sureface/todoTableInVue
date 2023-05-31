@@ -1,14 +1,11 @@
 <template>
   <div>
     <m-modal
-        @closeM2="closeM2"
-        v-if="isOpenM2"
-
-        @add-products="addProducts"
-
-        @edit-products="editProducts"
-
-        :modalOpened="isOpen"
+      v-if="isOpen"
+      :editedIndex="editedIndex"
+      :editedEmployers="editedEmployers"
+      @closeM2="closeModal2"
+      @formData="margeAddress"
     />
 
     <div class="action__modals" @click="closeModal1">
@@ -18,20 +15,18 @@
             <div>X</div>
           </div>
           <div class="text-center text-secondary text-lg">
-            Please Add New Employers
+            Do Something !
           </div>
           <form ref="form"  class="mb-3">
             <b-form-group
                 label="Name"
                 label-for="name-input"
                 invalid-feedback="Name is required"
-                :state="nameState"
                 class="mb-2"
             >
               <b-form-input
                   id="name-input"
-                  v-model="name"
-                  :state="nameState"
+                  v-model="editedEmployersData.name"
                   required
                   class="shadow-none"
               ></b-form-input>
@@ -40,13 +35,11 @@
                 label="Last Name"
                 label-for="Lname-input"
                 invalid-feedback="Last Name is required"
-                :state="nameState"
                 class="mb-2"
             >
               <b-form-input
                   id="Lname-input"
-                  v-model="last_name"
-                  :state="nameState"
+                  v-model="editedEmployersData.last_name"
                   required
                   class="shadow-none"
               ></b-form-input>
@@ -55,13 +48,11 @@
                 label="Age"
                 label-for="age-input"
                 invalid-feedback="Age is required"
-                :state="nameState"
                 class="mb-2"
             >
               <b-form-input
                   id="age-input"
-                  v-model="age"
-                  :state="nameState"
+                  v-model="editedEmployersData.age"
                   required
                   class="shadow-none"
               ></b-form-input>
@@ -70,12 +61,10 @@
                 label="Last Work Place"
                 label-for="last-work-input"
                 invalid-feedback="Last Work Place is required"
-                :state="nameState"
             >
               <b-form-input
                   id="last-work-input"
-                  v-model="last_work_place"
-                  :state="nameState"
+                  v-model="editedEmployersData.last_work_place"
                   required
                   class="shadow-none"
               ></b-form-input>
@@ -92,17 +81,19 @@
               Add New Product ! &nbsp; &nbsp; ( optional )
             </div>
 
-            <button class="btn btn-success mb-3" @click="isOpenM2 = true">Add Product</button>
+            <button class="btn btn-success mb-3" @click="isOpen = !isOpen">Add Product</button>
 
             <m-table
-              :subForm="isEditing ? editSubForm : subForm"
-              @deleteSubForm="deleteSubForm"
+              :address="editedEmployersData.address"
+              :editedIndex="editedIndex"
+              @newAddress="margeAddress"
+              @deletedAddress="updateAddress"
             />
 
           </div>
 
           <div class="d-flex align-items-center justify-content-end mt-4">
-            <button type="button" class="btn btn-success" @click="addEmployee">Add Now</button>
+            <button type="button" class="btn btn-success" @click="submitForm">{{formTitle}}</button>
           </div>
 
         </div>
@@ -119,105 +110,41 @@ import mModal from './additionalTable/m-modal';
 export default {
   name: "actionModals",
   props: {
-    selectedEmployee: Object,
-    isOpen: Boolean
+    editedIndex: Number,
+    editedEmployers: Object
   },
   components: {
     mTable,mModal
   },
   data() {
     return {
-      id: null,
-
-      name: '',
-      last_name: '',
-      age: null,
-      last_work_place: '',
-      subForm: [],
-
-      editSubForm: [],
-      isEditing: false,
-
-      nameState: null,
-      isOpenM2: false,
+      editedEmployersData: {...this.editedEmployers},
+      isOpen: false,
+    }
+  },
+  computed: {
+    formTitle() {
+      return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
     }
   },
   methods: {
-    checkFormValidity() {
-      const valid = this.$refs.form.checkValidity()
-      this.nameState = valid
-      return valid
-    },
-    resetModal() {
-      this.name = '';
-      this.last_name = '';
-      this.age = null;
-      this.last_work_place = '';
-      this.nameState = null;
-    },
     closeModal1() {
       this.$emit('close_modal', event);
-      this.resetModal()
     },
-    addEmployee() {
-      if (!this.checkFormValidity()) {
-        return
-      }
-
-      this.$emit('added-employee', {
-        name: this.name,
-        last_name: this.last_name,
-        age: this.age,
-        last_work_place: this.last_work_place,
-        id: this.id,
-
-        subForm: this.subForm,
-      })
-
-      this.resetModal();
+    closeModal2(){
+      this.isOpen = !this.isOpen
+    },
+    margeAddress(newAddress) {
+      this.editedEmployersData.address.push(newAddress)
+    },
+    updateAddress(updateAddress) {
+      this.editedEmployersData.address.push(updateAddress)
+    },
+    submitForm() {
+      this.$emit('formData', this.editedEmployersData)
       this.$emit('close_modal', event)
     },
-
-    editSelectedEmployee() {
-      if (Object.keys(this.selectedEmployee).length) {
-        this.name = this.selectedEmployee.first_name;
-        this.last_name = this.selectedEmployee.last_name;
-        this.age = this.selectedEmployee.age;
-        this.last_work_place = this.selectedEmployee.last_work_place;
-        this.id = this.selectedEmployee.id
-      }
-    },
-
-    closeM2() {
-      this.isOpenM2 = false
-    },
-
-    //add for table 2
-    addProducts(addSubForm) {
-      //add id and push global data
-      addSubForm.id = this.subForm.length + 1;
-      this.subForm.push(addSubForm)
-      console.log('add action for 2 modal',this.subForm)
-    },
-
-    //edit for table 2
-    editProducts(editSubForm) {
-      this.isEditing = true
-      this.editSubForm.push(editSubForm)
-
-      console.log('edit action for modal 2',this.editSubForm)
-    },
-    deleteSubForm(leftForm) {
-      this.subForm = leftForm
-    }
   },
-  mounted() {
-    this.editSelectedEmployee()
-    if (this.isOpen) {
-      this.resetModal()
-
-    }
-  }
 }
 </script>
 

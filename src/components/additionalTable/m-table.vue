@@ -2,7 +2,7 @@
   <div>
     <b-table
         hover
-        :items="subForm"
+        :items="addressData"
         :fields="fields"
         responsive="sm"
         label-sort-asc=""
@@ -31,10 +31,10 @@
     </b-table>
 
     <m-modal
-      v-if="isOpenM2"
-      :selectedProducts="selectedProducts"
-      @added-products="handleAdd"
+      v-if="isOpen"
+      :editedAddress="editedAddress"
       @closeM2="closeM2"
+      @formData="handleFormData"
     />
   </div>
 </template>
@@ -47,122 +47,73 @@ export default {
     mModal,
   },
   props: {
-    subForm: Array,
+    address: Array,
+    editedIndex: Number,
   },
   data() {
     return {
       fields: [
         {
-          key: 'name',
+          key: 'country',
           sortable: true,
         },
         {
-          key: 'material',
+          key: 'street',
           sortable: true,
         },
         {
-          key: 'type',
-          sortable: true,
-        },
-        {
-          key: 'size',
-          sortable: true,
-        },
-        {
-          key: 'date',
-          sortable: true,
-        },
-        {
-          key: 'quantity',
-          sortable: true,
-        },
-        {
-          key: 'color',
+          key: 'village',
           sortable: true,
         },
         {
           key: 'actions',
         },
       ],
-      isOpenM2: false,
-      selectedProducts: {},
-      editSubForm: [],
+      addressData: [...this.address],
+      editedAddressIndex: -1,
+      editedAddress: {
+          country: '',
+          street: '',
+          village: '',
+      },
+      defaultAddress: {
+        country: '',
+        street: '',
+        village: '',
+      },
+      isOpen: false,
     }
-  },
-
-  created() {
-    // let employee = localStorage.getItem('employee')
-    //
-    //
-    // if (employee) {
-    //   employee =  JSON.parse(employee)
-    //
-    //   for (let i = 0; i < employee.length; i++) {
-    //
-    //     if (this.selectedId === employee[i].id) {
-    //       this.editSubForm = employee[i].subForm
-    //     }
-    //
-    //   }
-    //
-    // }
-    //
-    // console.log('products', this.products)
-  },
-
-  methods: {
-    handleAdd(subForm) {
-      console.log(1,subForm)
-      // for (let i = 0; i < this.products.length; i++) {
-      //   if (this.products[i].id === form.id) {
-      //     this.products[i].name = form.name
-      //     this.products[i].type = form.type
-      //     this.products[i].material = form.material
-      //     this.products[i].size = form.size
-      //     this.products[i].date = form.date
-      //     this.products[i].color = form.color
-      //     this.products[i].quantity = form.quantity
-      //   }
-      // }
-    },
-    edit(item) {
-      //get selected row item
-      console.log('selected products',item)
-
-      this.selectedProducts = item;
-      this.isOpenM2 = true;
-    },
-    del(item) {
-      const id = this.deleteSubForm.indexOf(item)
-      this.deleteSubForm.splice(id, 1)
-      this.$emit('deleteSubForm', this.deleteSubForm)
-    },
-    closeM2() {
-      this.isOpenM2 = false
-    },
   },
   computed: {
-    deleteSubForm() {
-      return this.subForm
-    }
+
   },
-
-
-
-  // watch: {
-  //   products: {
-  //     handler() {
-  //       let employee = localStorage.getItem('employee')
-  //
-  //       if (employee) {
-  //         employee =  JSON.parse(employee)
-  //       }
-  //       console.log(6,employee)
-  //       return this.products = employee.subForm;
-  //     },
-  //     deep: true,
-  //   }
-  // }
+  methods: {
+    handleFormData(formData) {
+      if (this.editedAddressIndex > -1) {
+        Object.assign(this.addressData[this.editedAddressIndex], formData)
+      } else {
+        this.addressData.push(formData)
+      }
+      this.$emit('newAddress', this.addressData)
+    },
+    edit(item) {
+      this.isOpen = true
+      this.editedAddressIndex = this.addressData.indexOf(item)
+      this.editedAddress = Object.assign({}, item)
+    },
+    del(item) {
+      this.editedAddressIndex = this.addressData.indexOf(item)
+      this.addressData.splice(this.editedAddressIndex, 1)
+      this.$emit('deletedAddress', this.addressData)
+    },
+    closeM2() {
+      this.isOpen = false
+      this.$nextTick(() => {
+        this.editedEmployers = Object.assign({}, this.defaultAddress)
+        this.editedAddressIndex = -1
+      })
+    },
+  },
 }
 </script>
 
