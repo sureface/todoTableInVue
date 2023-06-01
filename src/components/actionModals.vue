@@ -82,7 +82,7 @@
             <button class="btn btn-success mb-3" @click="modal2 = true">Add Product</button>
 
             <m-table
-              :address="this.editedEmployersData.address"
+              :address="addressesWithoutEmptyObject"
               :add="addM2"
               @updateAddress="updateAddress"
             />
@@ -123,6 +123,9 @@ export default {
   computed: {
     formTitle() {
       return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
+    },
+    addressesWithoutEmptyObject() {
+      return this.editedEmployersData.address.filter(item => item.country !== "" && item.street !== "" && item.village !== "")
     }
   },
   mounted() {

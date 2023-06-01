@@ -82,7 +82,6 @@ export default {
   },
   methods: {
     getM2Form(form) {
-      console.log('form', form)
       if (this.editedIndexTable > -1) {
         Object.assign(this.editedAddress[this.editedIndexTable], form)
       } else {

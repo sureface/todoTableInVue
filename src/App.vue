@@ -20,7 +20,7 @@
       <div class="apper">
 
         <header class="mb-3">
-          <button class="btn btn-success" @click="isOpen = !isOpen" >Add</button>
+          <button class="btn btn-success" @click="isOpen = !isOpen">Add</button>
         </header>
 
         <b-table
