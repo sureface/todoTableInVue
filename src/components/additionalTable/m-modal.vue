@@ -14,7 +14,7 @@
           >
             <b-form-input
                 id="name-input"
-                v-model="editedAddressData.country"
+                v-model="editedM2.country"
                 required
                 class="shadow-none"
             ></b-form-input>
@@ -27,7 +27,7 @@
           >
             <b-form-input
                 id="type-input"
-                v-model="editedAddressData.street"
+                v-model="editedM2.street"
                 required
                 class="shadow-none"
             ></b-form-input>
@@ -40,14 +40,14 @@
           >
             <b-form-input
                 id="material-input"
-                v-model="editedAddressData.village"
+                v-model="editedM2.village"
                 required
                 class="shadow-none"
             ></b-form-input>
           </b-form-group>
         </form>
         <div class="d-flex align-items-center justify-content-end mb-4">
-          <button type="button" class="btn btn-success"  @click="submitForm">{{ formTitle }}</button>
+          <button type="button" class="btn btn-success" @click="m2FormSubmit"> {{title}} </button>
         </div>
       </div>
     </div>
@@ -58,26 +58,27 @@
 export default {
   name: "m-modal",
   props: {
-    editedIndex: Number,
-    editedAddress: Object,
+    editedIndexTable: Number,
+    emptyM2: Object,
   },
   data() {
     return {
-      isOpen: false,
-      editedAddressData: {...this.editedAddress}
+      m2index: -1,
+      editedM2: {...this.emptyM2}
     }
   },
   computed: {
-    formTitle() {
-      return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
-    },
+    title() {
+      return this.editedIndexTable > this.m2index ? 'edit' : 'add'
+    }
+  },
+  mounted() {
   },
   methods: {
-
-    submitForm() {
-      this.$emit('formData', this.editedAddressData)
+    m2FormSubmit() {
+      this.$emit('m2form', this.editedM2)
       this.$emit('closeM2', event)
-    }
+    },
   },
 }
 </script>

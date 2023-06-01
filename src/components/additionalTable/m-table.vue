@@ -2,7 +2,7 @@
   <div>
     <b-table
         hover
-        :items="addressData"
+        :items="editedAddress"
         :fields="fields"
         responsive="sm"
         label-sort-asc=""
@@ -31,10 +31,11 @@
     </b-table>
 
     <m-modal
-      v-if="isOpen"
-      :editedAddress="editedAddress"
-      @closeM2="closeM2"
-      @formData="handleFormData"
+        v-if="m2modal"
+        @m2form="getM2Form"
+        :editedIndexTable="editedIndexTable"
+        :emptyM2="editedIndexTable > -1 ? emptyM2 : this.add"
+        @closeM2="closeM2"
     />
   </div>
 </template>
@@ -48,10 +49,11 @@ export default {
   },
   props: {
     address: Array,
-    editedIndex: Number,
+    add: Object
   },
   data() {
     return {
+      editedAddress: [...this.address],
       fields: [
         {
           key: 'country',
@@ -69,51 +71,43 @@ export default {
           key: 'actions',
         },
       ],
-      addressData: [...this.address],
-      editedAddressIndex: -1,
-      editedAddress: {
+      editedIndexTable: -1,
+      emptyM2: {
           country: '',
-          street: '',
           village: '',
+          street: ''
       },
-      defaultAddress: {
-        country: '',
-        street: '',
-        village: '',
-      },
-      isOpen: false,
+      m2modal: false
     }
   },
-  computed: {
-
-  },
   methods: {
-    handleFormData(formData) {
-      if (this.editedAddressIndex > -1) {
-        Object.assign(this.addressData[this.editedAddressIndex], formData)
+    getM2Form(form) {
+      console.log('form', form)
+      if (this.editedIndexTable > -1) {
+        Object.assign(this.editedAddress[this.editedIndexTable], form)
       } else {
-        this.addressData.push(formData)
+        this.editedAddress.push(form)
       }
-      this.$emit('newAddress', this.addressData)
-    },
-    edit(item) {
-      this.isOpen = true
-      this.editedAddressIndex = this.addressData.indexOf(item)
-      this.editedAddress = Object.assign({}, item)
-    },
-    del(item) {
-      this.editedAddressIndex = this.addressData.indexOf(item)
-      this.addressData.splice(this.editedAddressIndex, 1)
-      this.$emit('deletedAddress', this.addressData)
     },
     closeM2() {
-      this.isOpen = false
-      this.$nextTick(() => {
-        this.editedEmployers = Object.assign({}, this.defaultAddress)
-        this.editedAddressIndex = -1
-      })
+      this.m2modal = false
+    },
+    edit(item) {
+      this.m2modal = true
+      this.editedIndexTable = this.editedAddress.indexOf(item)
+      this.emptyM2 = Object.assign({}, item)
+    },
+    del(item) {
+      console.log(1,item)
+      this.editedIndexTable = this.editedAddress.indexOf(item)
+      this.editedAddress.splice(this.editedIndexTable, 1)
     },
   },
+  watch: {
+    add: function (newVal) {
+      this.editedAddress.push(newVal)
+    }
+  }
 }
 </script>
 

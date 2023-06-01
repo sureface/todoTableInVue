@@ -1,11 +1,9 @@
 <template>
   <div>
     <m-modal
-      v-if="isOpen"
-      :editedIndex="editedIndex"
-      :editedEmployers="editedEmployers"
-      @closeM2="closeModal2"
-      @formData="margeAddress"
+      v-if="modal2"
+      @closeM2="toggleM2"
+      @m2form="getM2Form"
     />
 
     <div class="action__modals" @click="closeModal1">
@@ -81,13 +79,11 @@
               Add New Product ! &nbsp; &nbsp; ( optional )
             </div>
 
-            <button class="btn btn-success mb-3" @click="isOpen = !isOpen">Add Product</button>
+            <button class="btn btn-success mb-3" @click="modal2 = true">Add Product</button>
 
             <m-table
               :address="editedEmployersData.address"
-              :editedIndex="editedIndex"
-              @newAddress="margeAddress"
-              @deletedAddress="updateAddress"
+              :add="addM2"
             />
 
           </div>
@@ -119,7 +115,8 @@ export default {
   data() {
     return {
       editedEmployersData: {...this.editedEmployers},
-      isOpen: false,
+      modal2: false,
+      addM2: {}
     }
   },
   computed: {
@@ -127,18 +124,17 @@ export default {
       return this.editedIndex === -1 ? 'New Item' : 'Edit Item'
     }
   },
+  mounted() {
+  },
   methods: {
     closeModal1() {
       this.$emit('close_modal', event);
     },
-    closeModal2(){
-      this.isOpen = !this.isOpen
+    getM2Form(form) {
+      this.addM2 = {...form}
     },
-    margeAddress(newAddress) {
-      this.editedEmployersData.address.push(newAddress)
-    },
-    updateAddress(updateAddress) {
-      this.editedEmployersData.address.push(updateAddress)
+    toggleM2(){
+      this.modal2 = false
     },
     submitForm() {
       this.$emit('formData', this.editedEmployersData)
