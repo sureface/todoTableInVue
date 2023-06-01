@@ -82,7 +82,7 @@
             <button class="btn btn-success mb-3" @click="modal2 = true">Add Product</button>
 
             <m-table
-              :address="editedEmployersData.address"
+              :address="this.editedEmployersData.address"
               :add="addM2"
             />
 
