@@ -98,9 +98,9 @@ export default {
       this.emptyM2 = Object.assign({}, item)
     },
     del(item) {
-      console.log(1,item)
       this.editedIndexTable = this.editedAddress.indexOf(item)
       this.editedAddress.splice(this.editedIndexTable, 1)
+      this.$emit('updateAddress', this.editedAddress)
     },
   },
   watch: {

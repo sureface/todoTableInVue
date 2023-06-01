@@ -84,6 +84,7 @@
             <m-table
               :address="this.editedEmployersData.address"
               :add="addM2"
+              @updateAddress="updateAddress"
             />
 
           </div>
@@ -127,10 +128,14 @@ export default {
   mounted() {
   },
   methods: {
+    updateAddress(updateAddress) {
+      this.editedEmployersData.address = [...updateAddress]
+    },
     closeModal1() {
       this.$emit('close_modal', event);
     },
     getM2Form(form) {
+      this.editedEmployersData.address.push(form)
       this.addM2 = {...form}
     },
     toggleM2(){
